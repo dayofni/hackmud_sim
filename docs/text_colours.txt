@@ -1,0 +1,41 @@
+
+standard text  -> #7AB2F4 (S)
+script author  -> #9B9B9B (C)
+script name    -> #1EFF00 (2)
+trust script   -> #FF8000 (5)
+
+gc string num  -> #CACACA (B)
+"gc" in string -> #9B9B9B (C)
+
+1K gc string   -> #00FFFF (N)
+1M gc string   -> #1EFF00 (L)
+1B gc string   -> #FFF404 (J)
+1T gc string   -> #B035EE (T)
+1Q gc string   -> #FF0000 (D)
+
+DATA           -> #385A6C (q)
+KIN            -> #B3FF9B (M)
+FORM           -> #299400 (l)
+VOID           -> #FBC803 (H)
+CHAOS          -> #FF0000 (D)
+CHOICE         -> #7AB2F4 (S)
+LAW            -> #385A6C (q)
+WILD           -> #FF6A98 (Y)
+
+keys           -> #00FFFF (N)
+values         -> #FF00EC (V)
+
+:::TRUST:::    -> #FF0000 (D)
+@ in username  -> #9B9B9B (C)
+date "AD"      -> #CACACA (B)
+date "D"       -> #9B9B9B (C)
+date (year)    -> #FFFFFF (A)
+date (day)     -> #1EFF00 (L)
+
+all usernames
+    -> #FFF404 (J)
+    -> #F3F998 (K)
+    -> #B3FF9B (M)
+    -> #FF96E0 (W)
+    -> #1EFF00 (L)
+    -> #CACACA (B)

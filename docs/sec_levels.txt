@@ -1,0 +1,144 @@
+* indicates a script that cannot be subscripted.
+
+-----------------------
+        FULLSEC
+-----------------------
+
+FULLSEC scripts are the safest of all scripts in the MUD.
+They are vital to day-to-day life - scripts.get_level especially.
+None of these scripts can affect your account. (and the ones that can, can't be scripted!)
+
+Account access:
+ - Upgrades: None.
+ - GC:       None.
+ - Scripts:  None.
+ - Market:   View.
+
+Scripts:
+ - accts.balance_of_owner
+ - accts.xfer_gc_to_caller
+ - chats.create
+ - chats.send
+ - chats.tell
+ - escrow.charge
+ * escrow.confirm
+ * gui.chats
+ * gui.quiet
+ * gui.size
+ * gui.vfx
+ * gui.vol
+ - market.browse
+ - market.stats
+ - scripts.fullsec
+ - scripts.highsec
+ - scripts.midsec
+ - scripts.lowsec
+ - scripts.nullsec
+ - scripts.get_access_level
+ - scripts.get_level
+ - scripts.lib
+ - scripts.quine
+ - scripts.trust
+ * sys.init
+ - sys.upgrades_of_owner
+ - sys.xfer_upgrade_to_caller
+ - users.active
+ - users.last_action
+ - users.top
+
+-----------------------
+        HIGHSEC
+-----------------------
+
+HIGHSEC scripts are a less-common script level.
+They are able to gain information about your account and what it holds.
+
+Account access:
+ - Upgrades: View.
+ - GC:       View.
+ - Scripts:  View upgrade-scripts only.
+ - Market:   View.
+
+Scripts:
+ - accts.balance
+ - accts.transactions
+ - scripts.sys
+ - sys.specs
+ - sys.status
+ - sys.upgrade_log
+ - sys.upgrades
+
+-----------------------
+        MIDSEC
+-----------------------
+
+MIDSEC scripts are common.
+They are able to take GC from your account, change chat channels, and get non-personally-identifying info.
+They can also buy items from the market, manage your upgrades, and reset your autocompletes. 
+
+Account access:
+ - Upgrades: View.
+ - GC:       Transfer.
+ - Scripts:  View all scripts.
+ - Market:   View and buy items.
+
+Scripts:
+ - accts.xfer_gc_to
+ - autos.reset
+ - chats.channels
+ - chats.join
+ - chats.leave
+ - chats.users
+ - escrow.stats
+ - market.buy
+ - scripts.user
+ - sys.manage
+
+-----------------------
+        LOWSEC
+-----------------------
+
+LOWSEC scripts are dangerous.
+They are able to transfer away upgrades, steal your loc, access your access_log, and hardline. 
+
+Account access:
+ - Upgrades: Transfer, sell, and destroy.
+ - GC:       Transfer.
+ - Scripts:  View all scripts.
+ - Market:   View, buy, and sell items.
+
+Scripts:
+ - kernel.hardline
+ - market.sell
+ - sys.access_log
+ - sys.cull
+ - sys.loc
+ - sys.xfer_upgrade_to
+
+-----------------------
+        NULLSEC
+-----------------------
+
+Never run an untrusted NULLSEC script.
+These scripts have root access to your account.
+They can start BINMAT sessions, create and manage corporations, and breach your system.
+
+Account access:
+ - Upgrades: Transfer, sell, and destroy.
+ - GC:       Transfer.
+ - Scripts:  View all scripts.
+ - Market:   View, buy, and sell items.
+
+Scripts:
+ - binmat.connect
+ - binmat.c
+ - binmat.xform
+ - binmat.x
+ - corps.create
+ - corps.hire
+ - corps.manage
+ - corps.offers
+ - corps.quit
+ - corps.top
+ - sys.breach
+ - trust.me

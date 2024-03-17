@@ -1,0 +1,651 @@
+
+#---------------------#
+____ ____ ____ ___ ____
+|__| |    |     |  [__ 
+|  | |___ |___  |  ___]
+
+#---------------------#
+
+SCRIPT: accts.balance
+SECLVL: HIGHSEC
+
+SUMMARY:
+Shows your GC balance
+
+ARGUMENTS:
+  Default Mode
+    is_script {boolean} [OPTIONAL]
+        If true, output is a number, otherwise a GC string
+
+DESCRIPTION:
+Shows how much GC you have (and, if called on the CLI, updates the top-right box).
+
+If called on the CLI (or in a script with is_script:false), returns your GC as a GC string like 1M234K567GC. If called in a script (or with is_script:true on the CLI), returns a raw number like 1234567.
+
+#---------------------#
+
+SCRIPT: accts.transactions
+SECLVL: HIGHSEC
+
+SUMMARY:
+List your transactions
+
+ARGUMENTS:
+
+  Default Mode
+    count {number or "all"} [OPTIONAL]
+        How many transactions to include. Defaults to 5.
+    to {string} [OPTIONAL]
+        Show only transactions to the specified user
+    from {string} [OPTIONAL]
+        Show only transactions from the specified user
+    script {string} [OPTIONAL]
+        Show only transactions made by the specified script
+    is_script {boolean} [OPTIONAL]
+        Whether to get CLI or script-style output.
+
+DESCRIPTION:
+Lists all your transactions. With no arguments, returns your most recent 5 transactions. Each transaction includes the time, amount, sender, recipient, script that caused the xfer, and possibly a memo.
+
+Transactions can be filtered with the arguments, to narrow down transactions.
+
+On the CLI (or with is_script:false), amounts are GC strings and dates are in the game-style. In a script, or with is_script:true, amounts are numbers and dates are in normal/JS style.
+
+#---------------------#
+
+SCRIPT: accts.xfer_gc_to
+SECLVL: MIDSEC
+
+SUMMARY:
+Transfer GC to someone
+
+ARGUMENTS:
+  Default Mode
+    to {string} [REQUIRED]
+        Who should get the GC
+    amount {number or GC string} [REQUIRED]
+        How much GC to transfer
+    memo {string} [OPTIONAL]
+        A memo to attach to the transaction
+
+DESCRIPTION:
+Transfers GC to target user.
+
+#---------------------#
+
+SCRIPT: accts.xfer_gc_to_caller
+SECLVL: FULLSEC
+
+SUMMARY:
+Transfer GC to a script caller
+
+ARGUMENTS:
+  Default Mode
+    amount {number or GC string} [REQUIRED]
+        How much GC to transfer
+    memo {string} [OPTIONAL]
+        A memo to attach to the transaction
+
+DESCRIPTION:
+Can only be used as a subscript within another script.
+
+Transfers GC to the caller of the containing script - i.e. the user specified in context.caller
+
+
+#---------------------#
+____ _  _ ___ ____ ____
+|__| |  |  |  |  | [__ 
+|  | |__|  |  |__| ___]
+
+#---------------------#
+
+SCRIPT: autos.reset
+SECLVL: MIDSEC
+
+SUMMARY:
+Resets your autocompletes
+
+ARGUMENTS:
+  None
+    
+DESCRIPTION:
+Removes almost all autocompletes, keeping only kernel.hardline, scripts.trust, trust.sentience, and the client commands (help, shutdown, etc.)
+
+
+#---------------------#
+____ _  _ ____ ___ ____
+|    |__| |__|  |  [__ 
+|___ |  | |  |  |  ___]
+
+#---------------------#
+
+SCRIPT: chats.channels
+SECLVL: MIDSEC
+
+SUMMARY:
+Lists chat channels you have joined
+
+ARGUMENTS:
+None
+
+DESCRIPTION:
+This script returns an array of the chat channels you have joined, including corporate channels.
+
+#---------------------#
+
+SCRIPT: chats.channels
+SECLVL: FULLSEC
+
+SUMMARY:
+Create a new chat channel
+
+ARGUMENTS:
+  Default Mode
+    name {string} [REQUIRED]
+        The name of the channel to create
+    password {string} [OPTIONAL]
+        The password to secure the channel with
+
+DESCRIPTION
+This script lets you create a new chat channel. You cannot create a channel that already exists (including any of the default ports from 0000 to FFFF). If you do not supply a password, anyone can join your channel (but the channel name is not displayed anywhere, so they would have to discover it in some way first)
+
+#---------------------#
+
+SCRIPT: chats.join
+SECLVL: MIDSEC
+
+SUMMARY:
+Join a chat channel
+
+ARGUMENTS:
+
+  Default Mode
+    channel {string} [REQUIRED]
+        The channel to join
+    password {string} [OPTIONAL]
+        The password for the channel, if necessary
+
+
+DESCRIPTION:
+This script lets you join a chat channel. If the channel has a password, you must specify it with password. Note that you can only join corporate channels if you are hired.
+By default, you can only be in 5 channels at a time (including corporate channels). This limit can be increased with channel_count upgrades.
+
+#---------------------#
+
+SCRIPT: chats.leave
+SECLVL: MIDSEC
+
+SUMMARY:
+Leave a chat channel
+
+ARGUMENTS:
+  Default Mode
+    channel {string} [REQUIRED]
+        The channel to leave
+
+DESCRIPTION:
+This script lets you leave a chat channel. You cannot leave corporate channels - you must either quite or be fired.
+
+#---------------------#
+
+SCRIPT: chats.send
+SECLVL: FULLSEC
+
+SUMMARY:
+Send a chat message to a channel
+
+ARGUMENTS:
+  Default Mode
+    channel {string} [REQUIRED]
+        The channel to send the message to
+    msg {string} [REQUIRED]
+        The message to send
+
+DESCRIPTION:
+This script lets you send a message to the specified channel. You must have already joined the channel.
+
+#---------------------#
+
+SCRIPT: chats.tell
+SECLVL: FULLSEC
+
+SUMMARY:
+Send a chat message to a specified user
+
+ARGUMENTS:
+  Default Mode
+    to {string} [REQUIRED]
+        The name of the user to send the message to
+    msg {string} [REQUIRED]
+        The message to send
+
+DESCRIPTION:
+This script lets you send a message to a user directly. You can message any user, you only need their username.
+
+#---------------------#
+
+SCRIPT: chats.users
+SECLVL: MIDSEC
+
+SUMMARY:
+List the users in a channel
+
+ARGUMENTS:
+  Default Mode
+    channel {string} [REQUIRED]
+        The channel to check.
+
+DESCRIPTION:
+This script lets you see which users are in a channel. Users who have been active within the last hour will have a * before their name and be sorted to the bottom of the list.
+Note that you can only view the users of a channel you are currently in.
+
+
+#----------------------#
+____ ____ ____ ___  ____
+|    |  | |__/ |__] [__ 
+|___ |__| |  \ |    ___]
+
+#----------------------#
+
+SCRIPT: corps.create
+SECLVL: NULLSEC
+
+SUMMARY:
+Create a new corporation
+
+ARGUMENTS:
+  Default Mode
+    name {string} [REQUIRED]
+        The name of the new corporation
+
+DESCRIPTION:
+Creates a new corporation with the given name and automatically adds the user who ran it to that corp. Creating a corp costs 1BGC.
+Will also automatically create (and join) the corp chat channel - a special chat channel with the same name as the corp that can only be accessed by corp members.
+Corps share the same namespace as users, so a corp cannot be created with the same name as an existing user and vice versa.
+
+#----------------------#
+
+SCRIPT: corps.hire
+SECLVL: NULLSEC
+
+SUMMARY:
+Invite another user to your corp
+
+ARGUMENTS:
+  Default Mode
+    name {string} [REQUIRED]
+        The name of the user to hire
+
+DESCRIPTION:
+Will send an offer to the specified user to join your corp, which they can accept with corps.offers (see below).
+In order to send a hiring offer you must be either the owner or an admin of an existing corporation.
+
+#----------------------#
+
+SCRIPT: corps.manage
+SECLVL: NULLSEC
+
+SUMMARY:
+Manage various aspects of your corp
+
+ARGUMENTS:
+  Default Mode
+    command {string} [REQUIRED]
+        The command to perform - one of either "list", "promote", "demote", or "fire"
+  Promote/Demote/Fire Mode
+    name {string} [REQUIRED]
+        If command is "promote", "demote", or "fire", this is the name of the user to perform the relevant action on
+
+DESCRIPTION:
+Allows corp owners to manage their corporation.
+command:"list" lists all current corp members and whether they are an admin.
+command:"promote" promotes a regular member to an admin, which allows them to hire other users.
+command:"demote" demotes an admin to a regular member, which cannot hire other users.
+command:"fire" removes a user from the corporation entirely, also removing them from the corp chat channel.
+
+#----------------------#
+
+SCRIPT: corps.offers
+SECLVL: NULLSEC
+
+SUMMARY:
+List and accept pending corp hiring offers
+
+ARGUMENTS:
+  Default Mode
+    accept {string} [OPTIONAL]
+        The name of a corp whose offer you would like to accept
+
+DESCRIPTION:
+When run without arguments, shows your current corp (or null if you do not belong to one) and any open hiring offers.
+To accept a specific offer of employment, use accept and pass the name of the corp whose offer you would like to accept.
+
+#----------------------#
+
+SCRIPT: corps.quit
+SECLVL: NULLSEC
+
+SUMMARY:
+Quit your current corp
+
+ARGUMENTS:
+  Default Mode
+    confirm {boolean} [OPTIONAL]
+        Required to confirm your intent to quit the corporation
+
+DESCRIPTION:
+Quit the corporation to which you currently belong. This will also remove you from the corp chat channel.
+If quitting will result in the corp having 0 members, then it is dissolved.
+
+#----------------------#
+
+SCRIPT: corps.top
+SECLVL: NULLSEC
+
+SUMMARY:
+Lists the 10 most wealthy corporations, and the worth of your own corp
+
+ARGUMENTS:
+None
+
+DESCRIPTION:
+Lists the rank, name, and worth of the 10 most wealthy corps. Worth is determined by the sum of the balances of all members of that corp.
+If you are in a corp, also shows the name and worth of your own corp.
+
+
+#----------------------------#
+____ ____ ____ ____ ____ _ _ _
+|___ [__  |    |__/ |  | | | |
+|___ ___] |___ |  \ |__| |_|_|
+
+#----------------------------#
+
+SCRIPT: escrow.charge
+SECLVL: FULLSEC
+
+SUMMARY:
+Charge for scripts at FULLSEC, with confirmation
+
+ARGUMENTS:
+  Default Mode
+    cost {number or GC string} [REQUIRED]
+        The price of the script.
+    is_unlim {boolean} [OPTIONAL]
+        If true, indicates that the cost lets you call the script as many times as you want in 30 days. Otherwise, the cost is per run.
+
+DESCRIPTION:
+Allows you to charge for scripts while still maintaining FULLSEC (as opposed to accts.xfer_gc_to, which would make your script MIDSEC). It does this by requiring the caller to manually confirm the charges before they are actually required to pay.
+
+If called by a user who has not confirmed that escrow, the script will return a message telling them to do so. Script authors should return this message to the shell to allow the user to see it. If they have already confirmed this escrow, the script will charge them the agreed upon price and then return null. This has led to the calling convention:
+
+var result = #fs.escrow.charge({cost:<num or GC string>, is_unlim:<true or false>});
+if(result) return result;
+...
+
+Note that it will always return null for the script owner, so an alt may be required for debugging.
+
+If this is called twice in a single script run (including sub-scripts), this returns an error message to prevent multiple charges.
+
+If the amount charged changes in the same script, previously confirmed escrows are automatically invalidated. Otherwise, confirmed escrows remain in effect for 30 days, without the need to reconfirm.
+
+GC is sent to trust, and distributed back to the script owner at 00:00 UTC the next day.
+
+This script cannot meaningfully be called on the command line.
+
+#---------------------#
+
+SCRIPT: escrow.confirm
+SECLVL: FULLSEC
+
+SUMMARY:
+Confirm escrow charges
+
+ARGUMENTS:
+  Default Mode
+    i {string} [REQUIRED]
+        The escrow token to confirm
+    confirm {boolean} [OPTIONAL]
+        Whether you wish to confirm the charges
+        
+DESCRIPTION:
+This script allows you to confirm an escrow.charge. You provide it with the token given to you by escrow.charge.
+
+It is good practice to call this WITHOUT confirm first, so that you can verify the cost and unlimited state. Scripts which use escrow.charge can alter the cost message, so never trust them automatically.
+
+Confirmation lasts for 30 days or until the price of the script changes, at which point reconfirmation is required before the script can charge you again.
+
+
+#---------#
+____ _  _ _
+| __ |  | |
+|__] |__| |
+
+#---------#
+
+SCRIPT: gui.chats
+SECLVL: FULLSEC
+
+SUMMARY:
+Toggles where chats are displayed
+
+ARGUMENTS:
+  Default Mode
+    shell {boolean}
+        Whether to display chat messages in the main shell window
+    chat {boolean}
+        Whether to display chat messages in the right-hand chat window
+
+DESCRIPTION:
+This changes where chat messages are displayed.
+By default, chats are visible in both the shell window and the chat window. Use of this script allows you to disable one or both of those behaviours.
+Note that as a consequence, this will also affect whether chat messages are saved in shell.txt and/or chats.txt in the hackmud directory.
+
+#---------#
+
+SCRIPT: gui.quiet
+SECLVL: FULLSEC
+
+SUMMARY:
+Visually quiets chats from some users
+
+ARGUMENTS:
+  Default Mode
+    add {string}
+        Name of a user to add to the quiet list
+    remove {string}
+        Name of a user to remove from the quiet list
+    list {boolean}
+        When true, displays the quiet list
+    clear {boolean}
+        When true, empties the quiet list
+
+DESCRIPTION:
+Controls an in-game list of users whose chats are displayed in muted colors.
+For single-line chat messages, they become a very muted dark grey. For messages containing newlines, however, they only revert to the default blue.
+Note that quieted chats may still add to your autocompletes.
+
+#---------#
+
+SCRIPT: gui.size
+SECLVL: FULLSEC
+
+SUMMARY:
+Changes GUI size setting
+
+ARGUMENTS:
+  Default Mode
+    i {integer} [REQUIRED]
+        Scale factor for the GUI size [-20, 20]
+
+DESCRIPTION:
+Changes your GUI size setting, which affects the scale of the GUI. Negative values reduce the size and positive values increase it. Valid values are from -20 to 20, inclusive.
+Running this script without the necessary argument will also display your current size setting.
+
+#---------#
+
+SCRIPT: gui.vfx
+SECLVL: FULLSEC
+
+SUMMARY:
+Adjusts strength of visual effects
+
+ARGUMENTS:
+  Default Mode
+    bloom {integer}
+        Controls the strength of the bloom effect [0, 11]
+    noise {integer}
+        Controls the strength of the noise effect [0, 11]
+    scan {integer}
+        Controls the strength of the scan effect [0, 11]
+    bend {integer}
+        Controls the strength of the bend effect [0, 11]
+
+DESCRIPTION:
+Allows you to adjust the strength of certain visual effects on the GUI. Valid values are from 0 to 11, inclusive. A value of 0 will effectively disable the corresponding effect.
+Bloom controls how much bright colors will "bleed" into surrounding dark areas.
+Noise controls the noise/grain effect in the background.
+Scan controls the simulated scan-line effect in the background.
+Bend controls the warping of the GUI to simulate a curved screen surface.
+Running the script without args will display your current settings.
+
+#---------#
+
+SCRIPT: gui.vol
+SECLVL: FULLSEC
+
+SUMMARY:
+Adjusts volume settings
+
+ARGUMENTS:
+  Default Mode
+    sfx {integer}
+        The volume of all non-music sound effects [0, 11]
+    bgm {integer}
+        The volume of the background music [0, 11]
+
+DESCRIPTION:
+Allows you to adjust the volume of the game. Valid values are from 0 to 11, inclusive. A value of 0 will mute that sound category entirely.
+
+
+#---------------------------#
+_  _ ____ ____ _  _ ____ _   
+|_/  |___ |__/ |\ | |___ |   
+| \_ |___ |  \ | \| |___ |___
+
+#---------------------------#
+
+SCRIPT: kernel.hardline
+SECLVL: LOWSEC
+
+SUMMARY:
+Enter or exit hardline mode
+
+ARGUMENTS:
+  Default Mode
+    dc {boolean} [OPTIONAL]
+        If dc === true (specifically the boolean true, not any truthy), disconnects from active hardline
+
+DESCRIPTION:
+This script lets you enter or exit hardline mode. You must be hardlined in order to connect to locs and to run "PVP" scripts, such as sys.expose_balance.
+
+
+#--------------------------#
+_  _ ____ ____ _  _ ____ ___
+|\/| |__| |__/ |_/  |___  | 
+|  | |  | |  \ | \_ |___  | 
+
+#--------------------------#
+
+[PLACEHOLDER]
+
+
+#----------------------------#
+____ ____ ____ _ ___  ___ ____
+[__  |    |__/ | |__]  |  [__ 
+___] |___ |  \ | |     |  ___]
+
+#----------------------------#
+
+[PLACEHOLDER]
+
+
+#-------------#
+____ _   _ ____
+[__   \_/  [__ 
+___]   |   ___]
+
+#-------------#
+
+[PLACEHOLDER]
+
+
+#--------------------#
+___ ____ _  _ ____ ___
+ |  |__/ |  | [__   | 
+ |  |  \ |__| ___]  | 
+
+#--------------------#
+
+SCRIPT: trust.me
+SECLVL: NULLSEC
+
+SUMMARY:
+Thanks the user
+
+ARGUMENTS:
+Unknown
+
+DESCRIPTION:
+Thanks the user, presumably for trusting trust enough to run her NULLSEC script.
+Though nothing adverse has been observed, full details on this mysterious script remain unknown.
+
+
+#----------------------#
+_  _ ____ ____ ____ ____
+|  | [__  |___ |__/ [__ 
+|__| ___] |___ |  \ ___]
+
+#----------------------#
+
+SCRIPT: users.active
+SECLVL: FULLSEC
+
+SUMMARY:
+Displays number of active users
+
+ARGUMENTS:
+None
+
+DESCRIPTION:
+Returns the number of users who have been active within the last hour.
+This includes users kept active with cron bots or the official chat API.
+
+#----------------------#
+
+SCRIPT: users.last_action
+SECLVL: FULLSEC
+
+ARGUMENTS:
+  Default Mode
+    name {string or array of strings} [REQUIRED]
+        A single name or an array of names of the user(s) to check
+
+DESCRIPTION:
+Returns the last-action time(s) of the specified user(s). If an array is supplied, it can contain at most 50 usernames to check.
+Last-action for a user is updated by any action other than switching away from that user, including: switching to them, running scripts, cron bot activity, and chat activity.
+Names of users that don't exist or that are still in the vLAN will return null, while names of corps will return the corp name but no associated time.
+
+#----------------------#
+
+SCRIPT: users.top
+SECLVL: FULLSEC
+
+SUMMARY:
+Lists the wealthiest users
+
+ARGUMENTS:
+None
+
+DESCRIPTION:
+Displays the top 10 users with the most GC.
+In addition to their name, it shows: their rank (1-10), their last-action rounded to the nearest day, and their GC balance.

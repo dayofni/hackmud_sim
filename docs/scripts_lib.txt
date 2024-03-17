@@ -1,0 +1,139 @@
+#fs.scripts.lib
+
+ok()
+This helper method is equivalent to return {ok:true}. Note: you have to return the result yourself.
+
+not_impl()
+This helper method is equivalent to return {ok:false, msg:"not implemented"}. Note: you have to return the result yourself.
+
+log(message)
+Pushes a string representation of a value onto an array of log messages. This compensates (at the time of writing) the disability to print messages to stdout on-the-fly. It does not write anything to stdout itself. You have to use the method below.
+
+get_log()
+Returns the array used by the log() function, which you can then access. Does not clone or clear the array afterwards; it's a direct reference to the same array, which means you have to clear it after you’re done with one thing and want to use it with a second thing.
+
+rand_int(min, max)
+Returns a random integer between min and max.
+
+are_ids_eq(id1, id2)
+Tests whether id1 and id2 values are equal. Apparently buggy at the moment.
+
+is_obj(what)
+Returns true if what is an Object (note that arrays are Objects).
+
+is_str(what)
+Returns true if what is a String.
+
+is_num(what)
+Returns true if what is a Number. This treats NaN (not a number) as not a number, even though in JS, typeof NaN == “number”.
+
+is_int(what)
+Returns true if what is is both a Number (via is_num), and also an integer.
+
+is_neg(what)
+Returns true if what is is both a Number (via is_num), and also negative (i.e. <0).
+
+is_arr(what)
+Returns true if what is an Array.
+
+is_func(what)
+Returns true if what is a Function.
+
+is_def(what)
+Returns true if what is defined (that is, not undefined -- ed note: null and undefined are VERY different things. This handles only undefined. A null variable is still defined -- it is defined as null).
+
+is_valid_name(what)
+Returns true if what is a valid user/script name (i.e. containing only a-z, _, and 0-9, and not starting with a number. There might also be a length limit).
+
+dump(obj)
+Returns a string representation of the obj argument.
+
+clone(obj)
+Returns a clone of the obj argument (meaning references are broken).
+
+merge(obj1, obj2)
+Merges the contents of obj2 into obj1. This can be useful for combining defaults with user-specified values, but it is not quite secure on its own (i.e. don’t trust it to secure DB filters).
+
+get_values(obj)
+(ED NOTE: this was empty, I'll fill this in later)
+
+hash_code(string)
+Returns a number calculated based on the string argument.
+
+to_gc_str(num)
+Converts raw num number to a GC currency representation.
+
+to_gc_num(str)
+Converts GC currency representation to a raw number.
+
+to_game_timestr(date)
+Converts a Date object specified via date parameter to a game-styled time string.
+
+cap_str_len(string, length)
+Truncates the given string to the given length if it's longer than that.
+
+each(array, fn)
+Runs fn on each array element. The fn function signature is specified in [4] at Misc, and stays the same for all filtering functions.
+
+select(array, fn)
+Returns a collection of values from array that matches the fn predicate. If the predicate returns true, the select function adds the key:value pair currently processed to the returned collection of values.
+
+count(array, fn)
+Returns a number of items from array that matches the fn predicate. If the predicate returns true, the count function increments the returned number by one.
+
+select_one(array, fn)
+Same as the select function, but returns the first value that matches the predicate.
+
+map(array, fn)
+Applies the fn function to each array element. The function-returned value is then stored in the map-returned array at the same index as currently processed value’s index.
+
+shuffle(array)
+Shuffles an array and returns it.
+
+sort_asc(..?)
+Likely sorts an array using the num_sort_asc sorting function, unknown at the moment
+
+sort_desc(..?)
+(ED NOTE: empty)
+
+num_sort_asc(one, two)
+If one > two, returns 1. If two is greater than one, return -1. Else return 0. Looks like a sorting function
+
+num_sort_desc(one, two)
+Returns the opposite of the above, ie -1 on one > two, and 1 on two > one
+
+max_val_index(array)
+Returns the index of the item in the array that has the maximum value
+
+add_time(date, add_ms)
+Gets the date of date + add_ms (milliseconds)
+
+security_level_names[security_level]
+An array containing names of the security levels (NULLSEC, LOWSEC, MIDSEC, HIGHSEC, FULLSEC)
+
+get_security_level_name(security_level)
+Takes a parameter between 0 and 4 (inclusive), returns the corresponding security from NULLSEC (0) to FULLSEC (4)
+
+create_rand_string(len)
+Returns a random string consisting of lowercase alphanumeric characters.
+
+get_user_from_script(script_name)
+Returns the user from a script name. Ie me.target returns me
+
+u_sort_num_arr_desc(array)
+Returns the array argument sorted in the descending fashion. This duplicates the array, e.g. you need to use the returned value in order to use the sorted array.
+
+can_continue_execution(time_left)
+Checks if the script can continue execution in the given time frame. The maximum time frame of a running script is 5000 milliseconds. If the given value is in the range of available execution time, the script returns true otherwise it returns false.
+
+can_continue_execution_error()
+If the script cannot continue execution in the given time frame (see above), this method returns the reason why the above routine returned false.
+
+date()
+(ED NOTE: empty)
+
+get_date()
+Gets the current date
+
+get_date_utcsecs()
+Gets the current time from the date (ie Date.getTime())

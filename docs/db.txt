@@ -1,0 +1,39 @@
+
+#db.i(document)
+  Insert:
+https://docs.mongodb.com/manual/reference/method/db.collection.insert/
+This command creates new #db documents.
+Called like #db.i(<object>);
+Ex: #db.i({ SID:”scriptname” }) Inserts a document with key “SID” and value “scriptname”
+If the object is an array of non-array objects, each element of the array is inserted as its own document.
+
+#db.r(query)
+  Remove:
+https://docs.mongodb.com/manual/reference/method/db.collection.remove/
+This command deletes #db documents matching your query.
+Called like #db.r({query});
+Ex: #db.r({ SID:”scriptname” }) removes all documents where key “SID” contains the value “scriptname”.
+
+#db.f(query,projection)
+  Find:
+https://docs.mongodb.com/manual/reference/method/db.collection.find/
+This command returns any documents matching your query.
+Called like #db.f({query}, {projection}).command() where “command” is either “first” or “array” (less common commands: distinct, sort, limit, skip, and others)
+Ex: #db.f({ SID:”scriptname” }).array() returns an array of documents where key “SID” contains the value “scriptname”.
+Ex: #db.f({ SID:”scriptname” }, { field:1, _id:0 }).first() returns the value for the key “field” inside the first document it finds where key “SID” contains the value “scriptname”.
+
+#db.u(query,command)
+  Update:
+https://docs.mongodb.com/manual/reference/method/db.collection.update/
+This command updates any pre-existing documents matching the query.
+Called like #db.u({query}, { updateOper:{updatedfields} }) applies “update” to any documents matching the query.
+Ex: #db.u({ SID:”scriptname” }, { $set:{field:”new value”} }) sets key field to “new value” in any documents where key “SID” contains the value “scriptname”.
+This can be a very complex operation. It is HIGHLY recommended you follow the aforementioned hyperlink.
+
+#db.u1(query,command)
+  Update 1
+This command is nearly identical to #db.u(), except that it will update at most one document (the one that you would get if you used cursor.first() with the same query). One other change is that you can simply pass your object as the 2nd argument, with no $set or other mongo commands, to replace the object entirely (note that this can be prone to race conditions).
+
+#db.us(query,command)
+  Upsert
+This command is nearly identical to #db.u(), if no documents match the query, one document will be inserted (“upserted”) based on the properties in both the query and the command. The $setOnInsert operator is useful to set defaults.
