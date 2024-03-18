@@ -6,7 +6,7 @@
     - a preprocessor runs on them the expand game commands (like script calls, #D, #db, etc)
     - dependencies are fetched recursively until all the code is found and preprocessed
     - it's all stuck together along with some game-provided boilerplate
-    - checked for sanity with Esprima and then handed off to v8
+    - sanity-checked with Esprima and then handed off to v8
 
 # limiting factors:
     
@@ -27,3 +27,9 @@
     - parser doesn't know that // inside a str isn't a comment
     - hackmud will truncate `var x="http://google.com"` to `var x="http:` which will cause a syntax error. 
     - easiest fix is to use /\/ anywhere you want // to appear.
+
+# likely dependencies
+
+    - Esprima for JS verification | esprima
+    - V8 JS engine                | stpyv8 "STPyV8"
+    - MongoDB handler             | pymongo
