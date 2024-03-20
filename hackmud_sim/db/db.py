@@ -127,6 +127,8 @@ class HackmudDatabase:
     
     def i(self, user, data: Union[dict[str, Any], list[dict[str, Any]]]) -> None:
         
+        start = time() * 1000
+        
         if (type(data) not in [list, tuple]):
             mdb_result = self.users[user]["#db"].insert_one(data)
         
@@ -137,13 +139,13 @@ class HackmudDatabase:
             return {
                 "n": 0,
                 "ok": False,
-                "opTime": {"t": time()}
+                "opTime": round((time() * 1000) - start)
             }
         
         return {
             "n": 1 if type(mdb_result) == pymongo.results.InsertOneResult else len(mdb_result.inserted_ids),
             "ok": True,
-            "opTime": {"t": time()}
+            "opTime": round((time() * 1000) - start)
         }
     
     def f(self, user: str, query: dict[str, Any], *projection) -> None:
@@ -159,19 +161,22 @@ class HackmudDatabase:
         
     
     def r(self, user: str, query: dict[Any, Any]) -> None:
+        
+        start = time() * 1000
+        
         mdb_result = self.users[user]["#db"].delete_many(query)
         
         if not mdb_result.acknowledged:
             return {
                 "n": 0,
                 "ok": False,
-                "opTime": {"t": time()}
+                "opTime": round((time() * 1000) - start)
             }
         
         return {
             "n": mdb_result.deleted_count,
             "ok": True,
-            "opTime": {"t": time()}
+            "opTime": round((time() * 1000) - start)
         }
     
     def u(self, user): ...
