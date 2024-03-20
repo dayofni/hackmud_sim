@@ -14,7 +14,9 @@ class HackmudDatabase:
         self.mongo_server = None
         self.db_path      = db_path
         self.host         = host
-        self.port         = port     # heh l337 5p34k makes a comeback
+        self.port         = port     # 1337 game, dude
+        
+        self.mongo_out = None
     
     def __enter__(self):
         
@@ -27,10 +29,8 @@ class HackmudDatabase:
         return self
 
     def __exit__(self, *exc: Any) -> None:
-        
-        print("\n\n\nkilled the MongoDB server\n\n\n")
-        
         self.mongo_server.terminate() # kill the server
+        self.mongo_out.close()
     
     def start_mongodb(self, db_path: Optional[str], port: int) -> None:
         
@@ -47,10 +47,15 @@ class HackmudDatabase:
         if not exists(db_path):
             makedirs(db_path)
         
+        # Create steam to pipe cmd to
+            
+        self.mongo_out = open(join(current_dir, "mongodb_server.log"), "w")
+        
         # run mongod commands and init the database
         
         command = " ".join([join(current_dir, "mongod"), f"--dbpath {db_path}", f"--port {port}"])
-        self.mongo_server = Popen(command)
+        
+        self.mongo_server = Popen(command, stdout=self.mongo_out)
     
     def start_client(self, host: str, port: int) -> None:
         
