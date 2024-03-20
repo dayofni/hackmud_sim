@@ -2,8 +2,8 @@
 import pymongo
 
 from subprocess import Popen
-from os         import makedirs
-from os.path    import exists, dirname, join, isdir, realpath
+from os         import makedirs, getcwd
+from os.path    import exists, dirname, join, realpath
 
 from typing import Any, Optional, Union
 
@@ -49,7 +49,7 @@ class HackmudDatabase:
         
         # Create steam to pipe cmd to
             
-        self.mongo_out = open(join(current_dir, "mongodb_server.log"), "w")
+        self.mongo_out = open(join(getcwd(), "mongodb_server.log"), "w")
         
         # run mongod commands and init the database
         
