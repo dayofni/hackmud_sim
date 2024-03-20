@@ -8,7 +8,7 @@ class HackmudServer:
     def __init__(self) -> None:
         
         self.channels = {}
-        self.users    =  
+        self.users    =  ...
     
     def __enter__(self):
         return self

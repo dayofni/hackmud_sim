@@ -1,5 +1,8 @@
 
-from hackmud_sim import HackmudServer
+from hackmud_sim.db import HackmudDatabase
 
-with HackmudServer() as server:
-    server.start()
+with HackmudDatabase() as db:
+
+    db.create_user("dayofni")
+
+    db.i("dayofni", {"game": "hello_world"})
