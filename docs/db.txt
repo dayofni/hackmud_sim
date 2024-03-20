@@ -37,3 +37,6 @@ This command is nearly identical to #db.u(), except that it will update at most 
 #db.us(query,command)
   Upsert
 This command is nearly identical to #db.u(), if no documents match the query, one document will be inserted (“upserted”) based on the properties in both the query and the command. The $setOnInsert operator is useful to set defaults.
+
+#db.ObjectID()
+  generates a mongodb ObjectID

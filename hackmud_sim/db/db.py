@@ -1,26 +1,70 @@
 
 import pymongo
+import pymongo.results
+
+from bson import ObjectId
 
 from subprocess import Popen
 from os         import makedirs, getcwd
 from os.path    import exists, dirname, join, realpath
+from time       import time
+from typing     import Any, Callable, Optional, Union
 
-from typing import Any, Optional, Union
+class HackmudCursorWrapper:
+    
+    """
+    Incomplete. Only using array and first for now.
+    
+    I'm fairly certain JSON only allows dict[str, Any]
+    """
+    
+    def __init__(self, cursor) -> None:
+        self.cursor = cursor
+    
+    def first(self) -> dict[str, Any]: # HIGHLY INEFFICIENT
+        return list(self.cursor)[0]
+        
+    def array(self) -> list[dict[str, Any]]:
+        return list(self.cursor)
+        
+    def count(self) -> int:
+        ...
+    
+    def each(self, function: Callable):
+        ...
+        
+    def distinct(self, key):
+        ...
+        
+    def sort(self):
+        ...
+        
+    def skip(self, num: int): # incomplete
+        self.cursor.skip(num)
+        
+    def limit(self, num: int): # incomplete
+        self.cursor.limit(num)
+        
+    def close(self): # incomplete
+        self.cursor.close()
+
 
 class HackmudDatabase:
     
-    def __init__(self, db_path=None, host="localhost", port=1337) -> None:
+    def __init__(self, db_path=None, port=1337) -> None:
+        
+        assert type(port) == int, "Port needs to be an int."
         
         self.mongo_server = None
         self.db_path      = db_path
-        self.host         = host
+        self.host         = "localhost", 
         self.port         = port     # 1337 game, dude
         
         self.mongo_out = None
     
     def __enter__(self):
         
-        #! Step 1: Load hackmud database
+        #! Step 1: Load MongoDB
         #! Steo 2: Start client.
         
         self.start_mongodb(self.db_path, self.port)
@@ -81,26 +125,66 @@ class HackmudDatabase:
             "scripts": self.scripts[user]
         }
     
-    def i(self, user, data: Union[Any, list[Any]]) -> None:
+    def i(self, user, data: Union[dict[str, Any], list[dict[str, Any]]]) -> None:
         
         if (type(data) not in [list, tuple]):
-            self.users[user]["#db"].insert_one(data)
+            mdb_result = self.users[user]["#db"].insert_one(data)
         
         else:
-            self.users[user]["#db"].insert_many(data)
+            mdb_result = self.users[user]["#db"].insert_many(data)
         
-        print(self.users[user]["#db"])
+        if not mdb_result.acknowledged:
+            return {
+                "n": 0,
+                "ok": False,
+                "opTime": {"t": time()}
+            }
+        
+        return {
+            "n": 1 if type(mdb_result) == pymongo.results.InsertOneResult else len(mdb_result.inserted_ids),
+            "ok": True,
+            "opTime": {"t": time()}
+        }
     
-    def f(self, user): ...
+    def f(self, user: str, query: dict[str, Any], *projection) -> None:
+        
+        if projection:
+            cursor = self.users[user]["#db"].find(query, projection=projection[0])
+        else:
+            cursor = self.users[user]["#db"].find(query)
+        
+        # wraps the cursor so we're using hackmud syntax
+        
+        return HackmudCursorWrapper(cursor)
+        
     
-    def r(self, user): ...
+    def r(self, user: str, query: dict[Any, Any]) -> None:
+        mdb_result = self.users[user]["#db"].delete_many(query)
+        
+        if not mdb_result.acknowledged:
+            return {
+                "n": 0,
+                "ok": False,
+                "opTime": {"t": time()}
+            }
+        
+        return {
+            "n": mdb_result.deleted_count,
+            "ok": True,
+            "opTime": {"t": time()}
+        }
     
     def u(self, user): ...
     
     def u1(self, user): ...
     
     def us(self, user): ...
+    
+    def ObjectId(self):
+        return {"$oid": str(ObjectId())}
 
+    # #db.ObjectId() Generates a MongoDB ObjectId.
+    
     # go through upload comms from game and add them here
     
     # edit
