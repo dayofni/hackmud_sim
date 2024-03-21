@@ -51,7 +51,7 @@ class HackmudCursorWrapper:
 
 class HackmudDatabase:
     
-    def __init__(self, db_path=None, port=1337) -> None:
+    def __init__(self, db_path: Optional[str] = None, port: int = 1337) -> None:
         
         assert type(port) == int, "Port needs to be an int."
         
@@ -125,7 +125,7 @@ class HackmudDatabase:
             "scripts": self.scripts[user]
         }
     
-    def i(self, user, data: Union[dict[str, Any], list[dict[str, Any]]]) -> None:
+    def i(self, user, data: Union[dict[str, Any], list[dict[str, Any]]]) -> dict[str, Any]:
         
         start = time() * 1000
         
@@ -148,7 +148,7 @@ class HackmudDatabase:
             "opTime": round((time() * 1000) - start)
         }
     
-    def f(self, user: str, query: dict[str, Any], *projection) -> None:
+    def f(self, user: str, query: dict[str, Any], *projection) -> HackmudCursorWrapper:
         
         if projection:
             cursor = self.users[user]["#db"].find(query, projection=projection[0])
@@ -158,9 +158,8 @@ class HackmudDatabase:
         # wraps the cursor so we're using hackmud syntax
         
         return HackmudCursorWrapper(cursor)
-        
     
-    def r(self, user: str, query: dict[Any, Any]) -> None:
+    def r(self, user: str, query: dict[str, Any]) -> dict[str, Any]:
         
         start = time() * 1000
         
@@ -179,16 +178,72 @@ class HackmudDatabase:
             "opTime": round((time() * 1000) - start)
         }
     
-    def u(self, user): ...
+    def u(self, user: str, query: dict[str, Any], update: dict[str, Any]) -> dict[str, Any]:
+        
+        start = time() * 1000
+        
+        mdb_result = self.users[user]["#db"].update_many(query, update)
+        
+        if not mdb_result.acknowledged:
+            return {
+                "n": 0,
+                "nModified": 0,
+                "ok": False,
+                "opTime": round((time() * 1000) - start)
+            }
+        
+        return {
+            "n": mdb_result.matched_count,
+            "nModified": mdb_result.modified_count,
+            "ok": True,
+            "opTime": round((time() * 1000) - start)
+        }
     
-    def u1(self, user): ...
+    def u1(self, user: str, query: dict[str, Any], update: dict[str, Any]) -> dict[str, Any]:
+        
+        start = time() * 1000
+        
+        mdb_result = self.users[user]["#db"].update_one(query, update)
+        
+        if not mdb_result.acknowledged:
+            return {
+                "n": 0,
+                "nModified": 0,
+                "ok": False,
+                "opTime": round((time() * 1000) - start)
+            }
+        
+        return {
+            "n": min(1, mdb_result.matched_count),
+            "nModified": min(1, mdb_result.modified_count),
+            "ok": True,
+            "opTime": round((time() * 1000) - start)
+        }
     
-    def us(self, user): ...
+    def us(self, user: str, query: dict[str, Any], update: dict[str, Any]) -> dict[str, Any]:
+        
+        start = time() * 1000
+        
+        mdb_result = self.users[user]["#db"].update_many(query, update, upsert=True)
+        
+        if not mdb_result.acknowledged:
+            return {
+                "n": 0,
+                "nModified": 0,
+                "ok": False,
+                "opTime": round((time() * 1000) - start)
+            }
+        
+        return {
+            "n": mdb_result.matched_count,
+            "nModified": mdb_result.modified_count,
+            "upserted": mdb_result.upserted_id,
+            "ok": True,
+            "opTime": round((time() * 1000) - start)
+        }
     
     def ObjectId(self):
         return {"$oid": str(ObjectId())}
-
-    # #db.ObjectId() Generates a MongoDB ObjectId.
     
     # go through upload comms from game and add them here
     

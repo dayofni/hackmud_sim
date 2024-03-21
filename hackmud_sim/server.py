@@ -8,13 +8,15 @@ class HackmudServer:
     def __init__(self) -> None:
         
         self.channels = {}
-        self.users    =  ...
+        self.users    = ...
+        self.db       = HackmudDatabase()
     
     def __enter__(self):
+        HackmudDatabase.__enter__()
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        ...
+    def __exit__(self, *exc):
+        HackmudDatabase.__exit__(*exc)
     
     async def main():
         
