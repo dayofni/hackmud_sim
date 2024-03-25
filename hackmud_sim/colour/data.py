@@ -70,6 +70,8 @@ HACKMUD_PALETTE = {    # All hackmud colours and their respective codes
     "Z": Colour(hex_code="#0C112B")
 }
 
+CORRUPTION_CHARS = "¡¢Á¤Ã¦§¨©ª"
+
 TEST_STRING = """
 `DR``HA``FI``LN``PB``TO``VW`
 
@@ -84,4 +86,6 @@ scripts.get_level {name: "trust.sentience"}
 dayofni.toybox    {script: "recon", args: {name: "trust.sentience"}}
 
 :::TRUST COMMUNICATION::: 2024AD D100: sentience @dayofni is hereby an enemy of trust
+
+¡¢Á¤Ã¦§¨©ª
 """

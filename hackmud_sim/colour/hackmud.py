@@ -7,8 +7,6 @@ from random import choice
 
 from hackmud_sim.colour.data import CLEAR, COLOUR_MODE, HACKMUD_PALETTE
 
-CORRUPT = "¡¢Á¤Ã¦§¨©ª"
-
 def parse_hackmud_codes(text: str, mode=COLOUR_MODE, clear=CLEAR) -> str:
     
     """
