@@ -1,4 +1,4 @@
-BSD 3-Clause License
+(a slightly modified) BSD 3-Clause License
 
 Copyright (c) 2024, dayofni
 
@@ -15,6 +15,16 @@ modification, are permitted provided that the following conditions are met:
 3. Neither the name of the copyright holder nor the names of its
    contributors may be used to endorse or promote products derived from
    this software without specific prior written permission.
+
+The following conditions have been provided by the script author:
+
+4. None of this source code shall be used for the purpose of creating an
+   unoffical replica hackmud server or client until the official servers
+   and clients become obsolete.
+   
+   A "replica hackmud server or client" includes the following:
+      - an unoffical server that can be connected to using official hackmud clients
+      - an unofficial client that can connect to the official hackmud server
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
