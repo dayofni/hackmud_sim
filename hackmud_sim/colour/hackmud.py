@@ -5,22 +5,17 @@ from json   import loads
 from re     import findall, finditer, sub
 from random import choice
 
-from hackmud_sim.colour.data import *
+from hackmud_sim.colour.data import CLEAR, COLOUR_MODE, HACKMUD_PALETTE
 
 CORRUPT = "¡¢Á¤Ã¦§¨©ª"
 
-#? hackmud formatting
-
-def parse_hackmud_codes(text: str, mode=None, clear=CLEAR) -> str:
+def parse_hackmud_codes(text: str, mode=COLOUR_MODE, clear=CLEAR) -> str:
     
     """
     Parses a hackmud-formatted string using colour format `$text`.
     
     Returns a string with ANSI colours in mode `mode`. If not set, uses default in `settings.json`.
     """
-    
-    if not mode:
-        mode = SETTINGS["colour_mode"]
     
     out = ""
     skip = False
@@ -40,22 +35,19 @@ def parse_hackmud_codes(text: str, mode=None, clear=CLEAR) -> str:
         elif character == "`" and c + 1 < len(text) and text[c+1].isalnum():
             skip = True
             in_search = True
-            colour = SETTINGS["colours"][text[c+1]]
-            out += get_escape_code(colour, mode=mode)
+            colour = HACKMUD_PALETTE[text[c+1]]
+            out += colour.get_escape_code(mode=mode)
             continue
         
         out += character
     
     return out
 
-def parse_script_names(text: str, mode=None, clear=CLEAR) -> str:
+def parse_script_names(text: str, mode=COLOUR_MODE, clear=CLEAR) -> str:
     
-    if not mode:
-        mode = SETTINGS["colour_mode"]
-    
-    COLOUR_SCRIPT = get_escape_code(SETTINGS["colours"]["2"])
-    COLOUR_AUTHOR = get_escape_code(SETTINGS["colours"]["C"])
-    COLOUR_TRUST  = get_escape_code(SETTINGS["colours"]["5"])
+    COLOUR_SCRIPT = HACKMUD_PALETTE["2"].get_escape_code(mode=mode)
+    COLOUR_AUTHOR = HACKMUD_PALETTE["C"].get_escape_code(mode=mode)
+    COLOUR_TRUST  = HACKMUD_PALETTE["5"].get_escape_code(mode=mode)
     
     TRUST_USERS = [
         "accts",
@@ -90,54 +82,50 @@ def parse_script_names(text: str, mode=None, clear=CLEAR) -> str:
     
     return text
 
-def parse_gc(text: str, mode=None, clear=CLEAR) -> str:
-    
-    if not mode:
-        mode = SETTINGS["colour_mode"]
+def parse_gc(text: str, mode=COLOUR_MODE, clear=CLEAR) -> str:
     
     # Find GC strings (9Q 7T 199B 254M 740K 991) GC
     
-    COLOUR_NUM = get_escape_code(SETTINGS["colours"]["B"], mode=mode)
-    COLOUR_GC  = get_escape_code(SETTINGS["colours"]["C"], mode=mode)
-    COLOUR_K   = get_escape_code(SETTINGS["colours"]["N"], mode=mode)
-    COLOUR_M   = get_escape_code(SETTINGS["colours"]["L"], mode=mode)
-    COLOUR_B   = get_escape_code(SETTINGS["colours"]["J"], mode=mode)
-    COLOUR_T   = get_escape_code(SETTINGS["colours"]["T"], mode=mode)
-    COLOUR_Q   = get_escape_code(SETTINGS["colours"]["D"], mode=mode)
+    COLOUR_NUM = HACKMUD_PALETTE["B"].get_escape_code(mode=mode)
+    COLOUR_GC_DENOM = {
+        "K": HACKMUD_PALETTE["N"].get_escape_code(mode=mode),
+        "M": HACKMUD_PALETTE["L"].get_escape_code(mode=mode),
+        "B": HACKMUD_PALETTE["J"].get_escape_code(mode=mode),
+        "T": HACKMUD_PALETTE["T"].get_escape_code(mode=mode),
+        "Q": HACKMUD_PALETTE["D"].get_escape_code(mode=mode)
+    }
+    COLOUR_GC  = HACKMUD_PALETTE["C"].get_escape_code(mode=mode)
+    
     
     gc_strs = findall(r"(?:\d+[QTBMK])*\d*GC\b", text)
     
     for gc_str in gc_strs.copy():
         
-        new = COLOUR_NUM + gc_str \
-            .replace("Q", COLOUR_Q + "Q" + COLOUR_NUM) \
-            .replace("T", COLOUR_T + "T" + COLOUR_NUM) \
-            .replace("B", COLOUR_B + "B" + COLOUR_NUM) \
-            .replace("M", COLOUR_M + "M" + COLOUR_NUM) \
-            .replace("K", COLOUR_K + "K" + COLOUR_NUM) \
-            .replace("GC", COLOUR_GC + "GC" + clear)
+        new = COLOUR_NUM + gc_str
+        
+        for denom, colour in COLOUR_GC_DENOM.items():
+            new = new.replace(denom, colour + denom + COLOUR_NUM)
+        
+        new = new.replace("GC", COLOUR_GC + "GC" + clear)
 
         text = text.replace(gc_str, new)
     
     return text
 
-def parse_sector(text: str, mode=None, clear=CLEAR):
-    
-    if not mode:
-        mode = SETTINGS["colour_mode"]
+def parse_sector(text: str, mode=COLOUR_MODE, clear=CLEAR):
     
     GREEK_LETTERS = "ALPHA|BETA|GAMMA|DELTA|EPSILON|ZETA|ETA|THETA|IOTA|KAPPA|LAMBDA|MU|NU|XI|OMICRON|PI|RHO|SIGMA|TAU|UPSILON|PHI|CHI|PSI|OMEGA"
-    BLANK = get_escape_code(SETTINGS["colours"]["C"], mode=mode)
+    BLANK = HACKMUD_PALETTE["C"].get_escape_code(mode=mode)
     
     AXIOMS = {
-        "DATA":   get_escape_code(SETTINGS["colours"]["q"], mode=mode),
-        "KIN":    get_escape_code(SETTINGS["colours"]["M"], mode=mode),
-        "FORM":   get_escape_code(SETTINGS["colours"]["l"], mode=mode),
-        "VOID":   get_escape_code(SETTINGS["colours"]["H"], mode=mode),
-        "CHAOS":  get_escape_code(SETTINGS["colours"]["D"], mode=mode),
-        "CHOICE": get_escape_code(SETTINGS["colours"]["5"], mode=mode),
-        "LAW":    get_escape_code(SETTINGS["colours"]["q"], mode=mode),
-        "WILD":   get_escape_code(SETTINGS["colours"]["Y"], mode=mode)
+        "DATA":   HACKMUD_PALETTE["q"].get_escape_code(mode=mode),
+        "KIN":    HACKMUD_PALETTE["M"].get_escape_code(mode=mode),
+        "FORM":   HACKMUD_PALETTE["l"].get_escape_code(mode=mode),
+        "VOID":   HACKMUD_PALETTE["H"].get_escape_code(mode=mode),
+        "CHAOS":  HACKMUD_PALETTE["D"].get_escape_code(mode=mode),
+        "CHOICE": HACKMUD_PALETTE["5"].get_escape_code(mode=mode),
+        "LAW":    HACKMUD_PALETTE["q"].get_escape_code(mode=mode),
+        "WILD":   HACKMUD_PALETTE["Y"].get_escape_code(mode=mode)
     }
     
     sectors = findall(r"(?:%s)_(?:%s)_\d"%("|".join(AXIOMS.keys()), GREEK_LETTERS), text) + findall(r"(?:SPC|NGC|VNP|HJG|K)_\d{4}", text)
@@ -159,17 +147,14 @@ def parse_sector(text: str, mode=None, clear=CLEAR):
 def replace(old, start, end, new):
     return old[:start] + new + old[end:]
 
-def parse_args(text: str, mode=None, clear=CLEAR):
-    
-    if not mode:
-        mode = SETTINGS["colour_mode"]
+def parse_args(text: str, mode=COLOUR_MODE, clear=CLEAR):
     
     # Stolen outright from dtr (like most things) and her hackmud-render project. (https://github.com/hackmud-dtr/hackmud-render)
     
-    ARCANE_MAGIC = compile(r'((?:(?:"(?:[^"\n]|\.)+")|(?:[a-zA-z_]\w*))[\t ]{0,2}):([\t ]{0,2}(?:(?:true)|(?:false)|(?:null)|(?:"(?:[^"\n]|\.)*")|(?:-?\d+\.?\d*)|\{|\[|#s\.[a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*))')
+    ARCANE_MAGIC = re.compile(r'((?:(?:"(?:[^"\n]|\.)+")|(?:[a-zA-z_]\w*))[\t ]{0,2}):([\t ]{0,2}(?:(?:true)|(?:false)|(?:null)|(?:"(?:[^"\n]|\.)*")|(?:-?\d+\.?\d*)|\{|\[|#s\.[a-z_][a-z0-9_]*\.[a-z_][a-z0-9_]*))')
     
-    COLOUR_KEY = get_escape_code(SETTINGS["colours"]["N"], mode=mode)
-    COLOUR_VAL = get_escape_code(SETTINGS["colours"]["V"], mode=mode)
+    COLOUR_KEY = HACKMUD_PALETTE["N"].get_escape_code(mode=mode)
+    COLOUR_VAL = HACKMUD_PALETTE["V"].get_escape_code(mode=mode)
     
     incr = 0
     
@@ -190,21 +175,18 @@ def parse_args(text: str, mode=None, clear=CLEAR):
         
     return text
 
-def parse_misc(text: str, mode=None, clear=CLEAR, user_colours={}):
+def parse_misc(text: str, mode=COLOUR_MODE, clear=CLEAR, user_colours={}):
     
     # usernames and :::TRUST COMMUNICATION:::
     # dates
     # @([a-z_][a-z0-9_]*)
     # :::TRUST COMMUNICATION:::
     
-    if not mode:
-        mode = SETTINGS["colour_mode"]
-    
-    COLOUR_TRUST = get_escape_code(SETTINGS["colours"]["D"], mode=mode)
-    COLOUR_YEAR  = get_escape_code(SETTINGS["colours"]["A"], mode=mode)
-    COLOUR_AD    = get_escape_code(SETTINGS["colours"]["B"], mode=mode)
-    COLOUR_DAY   = get_escape_code(SETTINGS["colours"]["L"], mode=mode)
-    COLOUR_D     = get_escape_code(SETTINGS["colours"]["C"], mode=mode)
+    COLOUR_TRUST = HACKMUD_PALETTE["D"].get_escape_code(mode=mode)
+    COLOUR_YEAR  = HACKMUD_PALETTE["A"].get_escape_code(mode=mode)
+    COLOUR_AD    = HACKMUD_PALETTE["B"].get_escape_code(mode=mode)
+    COLOUR_DAY   = HACKMUD_PALETTE["L"].get_escape_code(mode=mode)
+    COLOUR_D     = HACKMUD_PALETTE["C"].get_escape_code(mode=mode)
     
     text = text.replace(":::TRUST COMMUNICATION:::", COLOUR_TRUST + ":::TRUST COMMUNICATION:::" + clear)
     
@@ -213,7 +195,7 @@ def parse_misc(text: str, mode=None, clear=CLEAR, user_colours={}):
     for user in users:
         
         if user not in user_colours:
-            colour = get_escape_code(SETTINGS["colours"][choice("JKMWLB")], mode=mode)
+            colour = HACKMUD_PALETTE[choice("JKMWLB")].get_escape_code(mode=mode)
         else:
             colour = user_colours[colour]
         
@@ -223,7 +205,7 @@ def parse_misc(text: str, mode=None, clear=CLEAR, user_colours={}):
     
     return text
     
-def parse_hackmud_string(text: str, mode=None) -> str:
+def parse_hackmud_string(text: str, mode=COLOUR_MODE) -> str:
     
     # Need to include:
     # -> scripts
@@ -233,10 +215,7 @@ def parse_hackmud_string(text: str, mode=None) -> str:
     # -> @user
     # -> args
     
-    if not mode:
-        mode = SETTINGS["colour_mode"]
-    
-    clear = get_escape_code(SETTINGS["colours"]["S"], mode=mode)
+    clear = HACKMUD_PALETTE["S"].get_escape_code(mode=mode)
     
     text = parse_args(text, mode=mode, clear=clear)
     text = parse_script_names(text, mode=mode, clear=clear)
@@ -246,16 +225,3 @@ def parse_hackmud_string(text: str, mode=None) -> str:
     text = parse_misc(text, mode=mode, clear=clear)
     
     return clear + text + CLEAR
-
-#? misc colour scripts
-
-
-# Load colours from file, determine colour mode!
-
-with open(join(dirname(realpath(__file__)), "settings.json")) as f: # opens up settings!
-    SETTINGS = loads(f.read())["colour"]
-    
-    # change all colours to RGB values
-    
-    for colour, hexcode in SETTINGS["colours"].items():
-        SETTINGS["colours"][colour] = hex_to_rgb(hexcode)

@@ -10,17 +10,13 @@ class Colour:
         
         if rgb:
             
-            self.rgb = rgb
-            
-            self.hsv      = self.rgb_to_hsv(rgb)
+            self.rgb      = rgb
             self.hex_code = self.rgb_to_hex(rgb)
         
         elif hex_code:
             
             self.hex_code = hex_code
-            
-            self.rgb = self.hex_to_rgb(rgb)
-            self.hsv = self.rgb_to_hsv(self.rgb)
+            self.rgb      = self.hex_to_rgb(hex_code)
 
     def rgb_to_hex(self, rgb: tuple[int, int, int], add_hash: bool = True) -> str:
     
