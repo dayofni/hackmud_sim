@@ -17,8 +17,8 @@ modification, are permitted provided that the following conditions are met:
    this software without specific prior written permission.
 
 4. None of the source code shall be used for the purpose of creating an
-   unoffical replica hackmud server or client until the official servers
-   and clients become obsolete.
+   unoffical replica hackmud server or client until the official hackmud
+   servers are shut down permanently.
    
    A "replica hackmud server or client" includes the following:
       - an unoffical server that can be connected to using official hackmud clients
