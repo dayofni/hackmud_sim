@@ -1,6 +1,6 @@
 # hackmud-sim.py
 
-A Python scripting environment for the video game `hackmud`, released by Drizzly Bear in 2016, currently owned by COMCODE.
+A scripting environment (built using Python) for the video game `hackmud`, released by Drizzly Bear in 2016, currently owned by COMCODE.
 
 ## Current state of the project:
 
