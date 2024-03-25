@@ -1,82 +1,13 @@
-from re   import findall, compile, finditer, sub
-from math import sqrt
-from json import loads
 
+import re
+
+from json   import loads
+from re     import findall, finditer, sub
 from random import choice
 
-from os.path import join, dirname, realpath
+from hackmud_sim.colour.data import *
 
-CLEAR   = "\x1b[0m"
 CORRUPT = "¡¢Á¤Ã¦§¨©ª"
-
-#? Hex code and RGB conversion
-
-def hex_to_rgb(hexcode: str) -> tuple[int, int, int]:
-    
-    """
-    Get RGB values from hex colour code.
-    
-    Works with/without #. Ignores alpha.
-    """
-    
-    if hexcode[0] == "#":
-        hexcode = hexcode[1:]
-    
-    colours = [hexcode[:2], hexcode[2:4], hexcode[4:6]]    # Seperates out #RRGGBB to ["RR", "GG", "BB"]
-    colours = [int(colour, base=16) for colour in colours] # Turns hexes to integers
-    
-    return tuple(colours)
-
-def rgb_to_hex(rgb_values: tuple[int, int, int], add_hash=True) -> str:
-    
-    """
-    Generate hex colour code from RGB colour code.
-    """
-    
-    out = "#" if add_hash else ""
-    
-    for channel in rgb_values:
-        str_hex = hex(channel)[2:]
-        
-        out += "0" * (2-len(str_hex)) + str_hex
-        
-    
-    return out
-
-#? Escape code handling
-
-def get_escape_code(rgb: tuple[int, int, int], mode=None) -> str:
-    
-    red, green, blue = rgb
-    
-    if not mode:
-        mode = SETTINGS["colour_mode"]
-    
-    if mode == "truecolor":
-        return f"\x1b[38;2;{red};{green};{blue}m" # Really easy conversion!
-    
-    elif mode == "256-colour":
-        
-        # Code borrowed from StackOverflow answer https://stackoverflow.com/a/26665998.
-        # Adapted from JavaScript to Python.
-        
-        if (red == green and green == blue): # greyscale
-            
-            if red < 8:
-                colour = 16 # Handling edgecases
-            
-            elif red > 248:
-                colour = 231; # See above
-                
-            else:
-                colour = round(((red - 8) / 247) * 24) + 232
-        else:
-            colour = 16 \
-                + (36 * round(red / 255 * 5)) \
-                + (6 * round(green / 255 * 5))  \
-                + round(blue / 255 * 5);
-
-        return f"\x1b[38;5;{colour}m" # Really easy conversion!
 
 #? hackmud formatting
 
@@ -318,21 +249,6 @@ def parse_hackmud_string(text: str, mode=None) -> str:
 
 #? misc colour scripts
 
-def colour_to_pallete(rgb: tuple[int, int, int], pallete: list[tuple[int, int, int]]) -> tuple[int, int, int]:
-    
-    pallete_dists = {}
-    
-    for comp_colour in pallete:
-        
-        # Distance. It's better to be (+10, +10, +10) rather than (+30, 0, 0)
-        
-        dist = lambda cha_a, cha_b: abs(cha_a ** 2 - cha_b ** 2)
-        
-        distances = [dist(*channel) for channel in zip(rgb, comp_colour)]
-        
-        pallete_dists[comp_colour] = sum(distances)
-    
-    return min(pallete_dists, key=lambda a: pallete_dists[a])
 
 # Load colours from file, determine colour mode!
 
