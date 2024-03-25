@@ -1,8 +1,8 @@
 
-from hackmud_sim.db import HackmudDatabase
+from hackmud_sim    import HackmudServer
 
-with HackmudDatabase() as db:
+with HackmudServer() as server:
 
-    db.create_user("dayofni")
+    server.db.create_user("dayofni")
     
-    print(db.ObjectId())
+    print(server.db.ObjectId())

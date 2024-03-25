@@ -12,13 +12,13 @@ class HackmudServer:
         self.db       = HackmudDatabase()
     
     def __enter__(self):
-        HackmudDatabase.__enter__()
+        self.db.__enter__()
         return self
 
     def __exit__(self, *exc):
-        HackmudDatabase.__exit__(*exc)
+        self.db.__exit__(*exc)
     
     async def main():
         
-        while True: # while true, do nothing. we do not wish to do anything
+        while True: # while true, do nothing. we do not wish to do anything.
             pass

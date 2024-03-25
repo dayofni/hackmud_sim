@@ -2,11 +2,10 @@
 import pymongo
 import pymongo.results
 
+import hackmud_sim.db.mongod as mongod
+
 from bson import ObjectId
 
-from subprocess import Popen
-from os         import makedirs, getcwd
-from os.path    import exists, dirname, join, realpath
 from time       import time
 from typing     import Any, Callable, Optional, Union
 
@@ -48,10 +47,21 @@ class HackmudCursorWrapper:
     def close(self): # incomplete
         self.cursor.close()
 
-
 class HackmudDatabase:
     
     def __init__(self, db_path: Optional[str] = None, port: int = 1337) -> None:
+        
+        """
+        # NEVER EVER LET THE USER PICK THE DB_PATH.
+        
+        ## IF YOU VALUE YOUR COMPUTER. NEVER LET THEM PICK.
+        
+        AS IS, I CAN STILL THINK OF AN EXPLOIT TO GET AROUND IT.
+        
+        ONCE PEOPLE HAVE LOOKED AT THIS AND MADE DAMN SURE IT'S SAFE, *DON'T DO IT*!
+        
+        ### DON'T RISK IT
+        """
         
         assert type(port) == int, "Port needs to be an int."
         
@@ -64,42 +74,16 @@ class HackmudDatabase:
     
     def __enter__(self):
         
-        #! Step 1: Load MongoDB
-        #! Steo 2: Start client.
-        
         self.start_mongodb(self.db_path, self.port)
         self.start_client(self.host, self.port)
         
         return self
 
     def __exit__(self, *exc: Any) -> None:
-        self.mongo_server.terminate() # kill the server
-        self.mongo_out.close()
+        mongod.terminate_mongod() # kill the server
     
     def start_mongodb(self, db_path: Optional[str], port: int) -> None:
-        
-        current_dir = dirname(realpath(__file__))
-        
-        # set it to be hackmud_sim/db/data, get absolute path
-        
-        if not db_path:
-            db_path = join(current_dir, "data")
-        
-        # check to see if the data folder exists
-        # if not, create it
-        
-        if not exists(db_path):
-            makedirs(db_path)
-        
-        # Create steam to pipe cmd to
-            
-        self.mongo_out = open(join(getcwd(), "mongodb_server.log"), "w")
-        
-        # run mongod commands and init the database
-        
-        command = " ".join([join(current_dir, "mongod"), f"--dbpath {db_path}", f"--port {port}"])
-        
-        self.mongo_server = Popen(command, stdout=self.mongo_out)
+        mongod.start_mongod(port=port)
     
     def start_client(self, host: str, port: int) -> None:
         
