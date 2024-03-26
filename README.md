@@ -12,6 +12,7 @@ If this changes, I will change this message, and the code will be completely ope
 ### Finished features:
 
 - A locally hosted MongoDB accurate to the game.
+- A working colour-syntax highlighting script (that could use a little more work).
 
 ### TODO:
 

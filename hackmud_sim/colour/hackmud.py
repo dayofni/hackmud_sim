@@ -215,11 +215,16 @@ def parse_hackmud_string(text: str, mode=COLOUR_MODE) -> str:
     
     clear = HACKMUD_PALETTE["S"].get_escape_code(mode=mode)
     
-    text = parse_args(text, mode=mode, clear=clear)
-    text = parse_script_names(text, mode=mode, clear=clear)
-    text = parse_hackmud_codes(text, mode=mode, clear=clear)
-    text = parse_sector(text, mode=mode, clear=clear)
-    text = parse_gc(text, mode=mode, clear=clear)
-    text = parse_misc(text, mode=mode, clear=clear)
+    funcs = [
+        parse_args, 
+        parse_script_names,
+        parse_hackmud_codes,
+        parse_sector,
+        parse_gc,
+        parse_misc
+    ]
+    
+    for parser in funcs:
+        text = parser(text, mode=mode, clear=clear)
     
     return clear + text + CLEAR
