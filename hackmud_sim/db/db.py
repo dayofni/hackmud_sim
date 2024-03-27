@@ -4,10 +4,10 @@ import pymongo.results
 
 import hackmud_sim.db.mongod as mongod
 
-from bson import ObjectId
+from time   import time
+from typing import Any, Callable, Optional, Union
 
-from time       import time
-from typing     import Any, Callable, Optional, Union
+from bson import ObjectId
 
 class HackmudCursorWrapper:
     
@@ -230,6 +230,20 @@ class HackmudDatabase:
         return {"$oid": str(ObjectId())}
     
     # go through upload comms from game and add them here
+    
+    def upload_script(self, user: str, script_name: str, script: str) -> None:
+        
+        mdb_result = self.users[user]["scripts"].insert_one({"_id": script_name, "script": script})
+    
+    def update_script(self, user: str, script_name: str, script: str) -> None:
+        
+        mdb_result = self.users[user]["scripts"].update_one({"_id": {"$eq": script_name}}, {"$set": {"script": script}})
+    
+    def get_script(self, user: str, script_name: str) -> None:
+        
+        mdb_result = self.users[user]["scripts"].find({"_id": {"$eq": script_name}})
+        
+        return list(mdb_result)[0]
     
     # edit
     # dir
