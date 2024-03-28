@@ -32,4 +32,4 @@
 
     - Esprima for JS verification | esprima
     - V8 JS engine                | stpyv8 "STPyV8"
-    - MongoDB handler             | pymongo
+    - MongoDB handler             | pymongo <- change to motor
