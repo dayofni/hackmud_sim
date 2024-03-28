@@ -17,7 +17,7 @@ class WebsocketHandler:
             "exit": None
         }
         
-        self.sockets = []
+        self.sockets = {}
         self.ws      = False
     
     def set_callbacks(self, join_callback: Callable, msg_callback: Callable, exit_callback: Callable) -> None:
@@ -49,7 +49,7 @@ class WebsocketHandler:
         
         user_id = token_hex(32)
         
-        self.sockets.append(user_id)          # keep a running tally
+        self.sockets[user_id] = websocket     # keep a running tally
         await self.callbacks["join"](user_id) # run callback
         
         try:
@@ -57,13 +57,22 @@ class WebsocketHandler:
             async for message in websocket:
                 await self.callbacks["msg"](user_id, message) # new message, run callback
             
-            self.sockets.remove(user_id)          # user's gone
+            self.sockets.pop(user_id)             # user's gone
             await self.callbacks["exit"](user_id) # run callback
         
         except websockets.exceptions.ConnectionClosedError: # not sure if this is necessary
 
-            self.sockets.remove(user_id)
+            self.sockets.pop(user_id)
             await self.callbacks["exit"](user_id)
     
-    async def broadcast_msg(self, users):
-        ...
+    async def send_msg(self, user: str, msg: str) -> None:
+        
+        websocket = self.sockets[user]
+        await websocket.send(msg)
+    
+    async def broadcast_msg(self, users: list[str], msg: str) -> None:
+        
+        websockets = [self.sockets[user] for user in users]
+        
+        for ws in websockets:
+            await ws.send(msg)

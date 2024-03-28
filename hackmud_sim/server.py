@@ -6,13 +6,22 @@ from time import time
 from hackmud_sim.db      import HackmudDatabase
 from hackmud_sim.sockets import WebsocketHandler
 
+class Client:
+    ...
+
 class HackmudServer:
     
     def __init__(self) -> None:
         
         self.channels  = {}
+        
+        self.t = time()
+        
         self.db        = HackmudDatabase()
         self.ws        = WebsocketHandler()
+        
+        self.clients = {}
+        self.users   = {}
     
     async def __aenter__(self):
         self.db.__enter__()
@@ -36,7 +45,10 @@ class HackmudServer:
         ...
         
     async def websocket_msg(self, user, message):
-        ...
+        msg = f"[{round(time() - self.t)}] {user[:4]}: {message}"
+        await self.ws.broadcast_msg(list(self.ws.sockets.keys()), msg)
+        
+        print(msg)
     
     async def websocket_exit(self, user):
         ...
@@ -44,8 +56,11 @@ class HackmudServer:
     # Message handling
     
     async def broadcast_msg(self, channels):
-        ...
+        
+        # determine what users to broadcast to
+        
+        await self.ws.broadcast_msg()
     
     async def send_msg(self, user):
-        ...
         
+        await self.ws.send_msg()
