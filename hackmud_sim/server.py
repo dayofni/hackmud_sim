@@ -40,9 +40,6 @@ class HackmudServer:
     
     async def websocket_exit(self, user):
         ...
-        
-    async def client_handler(self):
-        ...
     
     # Message handling
     
