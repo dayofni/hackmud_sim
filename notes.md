@@ -28,8 +28,13 @@
     - hackmud will truncate `var x="http://google.com"` to `var x="http:` which will cause a syntax error. 
     - easiest fix is to use /\/ anywhere you want // to appear.
 
-# likely dependencies
+# trust
+    - she messages 0000-FFFF every 10 minutes with the current unix time in seconds
+    - no rate limit on transactions with her
+
+# dependencies
 
     - Esprima for JS verification | esprima
     - V8 JS engine                | stpyv8 "STPyV8"
-    - MongoDB handler             | pymongo <- change to motor
+    - MongoDB handler             | pymongo <- change to motor soon
+    - Async IO logger             | aiologger
