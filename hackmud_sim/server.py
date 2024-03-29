@@ -1,7 +1,7 @@
 
 import asyncio
 
-from time import time
+from time import time as unix_secs # yeah look I probably shouldn't do this but it's *very useful*
 
 from hackmud_sim.db      import HackmudDatabase
 from hackmud_sim.sockets import WebsocketHandler
@@ -14,16 +14,13 @@ class HackmudServer:
     
     def __init__(self) -> None:
         
-        self.channels  = {}
+        self.db      = HackmudDatabase()
+        self.ws      = WebsocketHandler()
+        self.logger  = setup_logger(name=__name__)
         
-        self.t = time()
-        
-        self.db        = HackmudDatabase()
-        self.ws        = WebsocketHandler()
-        self.logger    = setup_logger()
-        
-        self.clients = {}
-        self.users   = {}
+        self.clients  = {}
+        self.users    = {}
+        self.channels = {}
     
     async def __aenter__(self):
         self.db.__enter__()
@@ -48,9 +45,7 @@ class HackmudServer:
         
     async def websocket_msg(self, user, message):
         
-        print("running")
-        
-        msg = f"[{round(time() - self.t)}] {user[:4]}: {message}"
+        msg = f"{user[:4]}: {message}"
         await self.ws.broadcast_msg(list(self.ws.sockets.keys()), msg)
         
         self.logger.info(msg)
