@@ -1,0 +1,12 @@
+wolf   / infiltrator
+raven  / scavenger
+weaver / architect
+stag   / executive
+turtle / junkrack, diggerdeck, wreckbox, phreakrig, leetstack
+
+"New" NPCs will have their lockstack quality (see: turtle) and their class (if applicable) in their name. As examples, a classless NPC would have _jr_ in its name, a weaver with a diggerdeck would have _ddwvr_, or a stag with a phreakrig would have _prstg_. 
+
+
+%channel - Sets the outgoing messages to the channel
++username - Sets the outgoing messages to be delivered to user
+&chat_script - Changes the default chats.send to  the desired script
