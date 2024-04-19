@@ -52,7 +52,7 @@ class Colour:
 
             pallete_dists[comp_colour] = sum(distances)
 
-        return Colour(rgb=min(pallete_dists, key=lambda a: pallete_dists[a]))
+        return min(pallete_dists, key=lambda a: pallete_dists[a])
     
     def get_escape_code(self, mode="truecolor") -> str:
     

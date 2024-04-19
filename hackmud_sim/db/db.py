@@ -92,8 +92,6 @@ class HackmudDatabase:
         # Set up the DB.
         
         self.player_db   = self.client["databases"]
-        self.player_data = self.client["player_data"]
-        self.scripts     = self.client["scripts"]
         
         self.users = {}
     
@@ -104,9 +102,7 @@ class HackmudDatabase:
         # Creates a user using the db
         
         self.users[user] = {
-            "#db":     self.player_db[user],
-            "data":    self.player_data[user],
-            "scripts": self.scripts[user]
+            "#db":     self.player_db[user]
         }
     
     def i(self, user, data: Union[dict[str, Any], list[dict[str, Any]]]) -> dict[str, Any]:
@@ -228,28 +224,3 @@ class HackmudDatabase:
     
     def ObjectId(self):
         return {"$oid": str(ObjectId())}
-    
-    # go through upload comms from game and add them here
-    
-    def upload_script(self, user: str, script_name: str, script: str) -> None:
-        
-        mdb_result = self.users[user]["scripts"].insert_one({"_id": script_name, "script": script})
-    
-    def update_script(self, user: str, script_name: str, script: str) -> None:
-        
-        mdb_result = self.users[user]["scripts"].update_one({"_id": {"$eq": script_name}}, {"$set": {"script": script}})
-    
-    def get_script(self, user: str, script_name: str) -> None:
-        
-        mdb_result = self.users[user]["scripts"].find({"_id": {"$eq": script_name}})
-        
-        return list(mdb_result)[0]
-    
-    # edit
-    # dir
-    # up (delete public private shift)
-    # down
-    # DELETE
-    # scripts
-    #
-    #help

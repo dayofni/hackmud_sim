@@ -91,7 +91,7 @@ class HackmudServer:
             message = message.split(" ")[1:]
         
         if command == "sub":
-            
+            ...
         
         ...
     
